@@ -14,7 +14,7 @@
             <div class="el-form-item__label" style="padding-bottom: 0;">活动分类</div>
           </el-col>
           <el-col :span="2">
-            <el-button type="text">设置</el-button>
+            <el-button type="text" @click="dialogFormFenLeiVisible = true">设置</el-button>
           </el-col>
         </el-row>
         <el-radio-group v-model="ruleForm.fenLei">
@@ -29,8 +29,8 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-tag v-for="info in ruleForm.tagList" :key="info.name" type="primary" :closable="true" >{{info.name}}</el-tag>
-          <el-button icon="plus" size="large"></el-button>
+          <el-tag v-for="info in ruleForm.tagList" :key="info.name" type="primary" :closable="true" @close="delOneOfArr(info,ruleForm.tagList)">{{info.name}}</el-tag>
+          <el-button icon="plus" size="large" @click="dialogFormTagVisible = true"></el-button>
         </el-row>
       </el-form-item>
 
@@ -123,29 +123,23 @@
       </el-form-item>
 
       <el-form-item label="活动地点">
-        <el-dropdown>
-          <span class="el-dropdown-link">
-            下拉菜单<i class="el-icon-caret-bottom el-icon--right"></i>
-          </span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>黄金糕</el-dropdown-item>
-            <el-dropdown-item>狮子头</el-dropdown-item>
-            <el-dropdown-item>螺蛳粉</el-dropdown-item>
-            <el-dropdown-item disabled>双皮奶</el-dropdown-item>
-            <el-dropdown-item divided>蚵仔煎</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
+        <detail-address
+          :province="ruleForm.province"
+          :city="ruleForm.city"
+          :address="ruleForm.address"
+        >
+        </detail-address>
       </el-form-item>
 
       <el-form-item label="活动人数">
         <el-col :span="3">
-          <el-radio-group>
-            <el-radio>无限制</el-radio>
-            <el-radio>限制</el-radio>
+          <el-radio-group v-model="ruleForm.activePerson">
+            <el-radio label="无限制">无限制</el-radio>
+            <el-radio label="限制">限制</el-radio>
           </el-radio-group> 
         </el-col>
         <el-col :span="8">
-          <el-input placeholder="请输入内容" v-model="ruleForm.activePersonNum">
+          <el-input placeholder="请输入内容" v-model="ruleForm.activePersonNum" :disabled="ruleForm.activePerson == '无限制'">
             <template slot="append">人</template>
           </el-input>
         </el-col>
@@ -168,19 +162,19 @@
 
       <!-- 报名 -->
       <el-form-item label="报名用户信息展示">
-        <el-radio-group>
-          <el-radio>不展示</el-radio>
-          <el-radio>展示报名人数</el-radio>
-          <el-radio>展示报名清单</el-radio>
-          <el-radio>报名成功显示完整用户资料</el-radio>
+        <el-radio-group v-model="ruleForm.userMsgShow">
+          <el-radio label="不展示">不展示</el-radio>
+          <el-radio label="展示报名人数">展示报名人数</el-radio>
+          <el-radio label="展示报名清单">展示报名清单</el-radio>
+          <el-radio label="报名成功显示完整用户资料">报名成功显示完整用户资料</el-radio>
         </el-radio-group>
       </el-form-item>
 
       <el-form-item label="评价功能">
-        <el-radio-group>
-          <el-radio>不开启</el-radio>
-          <el-radio>实时评价</el-radio>
-          <el-radio>审核后评论</el-radio>
+        <el-radio-group v-model="ruleForm.evaluate">
+          <el-radio label="不开启">不开启</el-radio>
+          <el-radio label="实时评价">实时评价</el-radio>
+          <el-radio label="审核后评论">审核后评论</el-radio>
         </el-radio-group>
       </el-form-item>
 
@@ -201,30 +195,63 @@
       </el-form-item>
 
       <el-form-item>
-        <el-input size="large" placeholder="请填写您的广告标题"></el-input>
+        <el-input size="large" v-model="ruleForm.adTitle" placeholder="请填写您的广告标题"></el-input>
       </el-form-item>
 
       <el-form-item>
-        <el-input size="large" placeholder="请填写您的广告内容"></el-input>
+        <el-input size="large" v-model="ruleForm.adContent" placeholder="请填写您的广告内容"></el-input>
       </el-form-item>
 
       <el-form-item>
-        <el-input size="large" placeholder="请填写您的赞助链接"></el-input>
+        <el-input size="large" v-model="ruleForm.adSupportLink" placeholder="请填写您的赞助链接"></el-input>
       </el-form-item>
 
     </el-form>
+
+    <!-- 设置分类dialog -->
+    <el-dialog
+      title="设置活动分类"
+      :visible.sync="dialogFormFenLeiVisible"
+      size="tiny">
+      <el-tag v-for="info in ruleForm.fenLeis" :key="info.name" type="primary" :closable="true" :close-transition="true" @close="delOneOfArr(info,ruleForm.fenLeis)">{{info.name}}</el-tag>
+      <el-input v-model="dialogForm.newFenlei"></el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormFenLeiVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addNewFenLei">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    
+    <!-- 添加标签dialog -->
+    <el-dialog
+      title="设置活动分类"
+      :visible.sync="dialogFormTagVisible"
+      size="tiny">
+      <el-input v-model="dialogForm.newTagList"></el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormTagVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addNewTag">确 定</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 </template>
 
 
 
 <script>
+import detailAddress from '../../components/detailAddress.vue'
+import store from '../../store.js'
 
 export default {
   name: 'step1',
+  components: {
+    'detail-address': detailAddress
+  },
   data: function(){
     return {
       dialogFormFenLeiVisible: false,
+      dialogFormTagVisible: false,
       rules: {
         name: [
           {
@@ -268,10 +295,55 @@ export default {
         feeStartTime: '',
         feeEndData: '',
         feeEndTime: '',
+        province: '',
+        city: '',
+        address: '',
+        activePerson: '',
         activePersonNum: '',
-        activeDescribe: ''
+        activeDescribe: '',
+        userMsgShow: '',
+        evaluate: '',
+        adTitle: '',
+        adContent: '',
+        adTitle: '',
+        adSupportLink: ''
+      },
+      // 页面用于操作数组的临时变量
+      dialogForm: {
+        newTagList: '', // 新得标签
+        newFenlei: '',  // 新分类名称
       }
     }
+  },
+  methods: {
+    // 添加新的分类
+    addNewFenLei: function(){
+      this.ruleForm.fenLeis.push({name: this.dialogForm.newFenlei});
+      this.dialogFormFenLeiVisible = false;
+    },
+    // 添加新的标签
+    addNewTag: function(){
+      this.ruleForm.tagList.push({name: this.dialogForm.newTagList});
+      this.dialogFormTagVisible = false;
+    },
+    // 删除数组的一个数据项
+    delOneOfArr: function(info,arr){
+      var index = arr.indexOf(info);
+      arr.splice(index,1);
+    },
+  },
+  watch: {
+    /*深度watcher*/
+    ruleForm: {
+      handler: function(n,o){
+        store.commit('setRuleForm',this.ruleForm)
+      },
+      deep: true
+    }
+  },
+  /*生命周期钩子：实例创建完后才能之后被调用，挂载未开始*/
+  created: function(){
+    Object.assign(this.ruleForm,store.state.ruleForm);
   }
 }
 </script>
