@@ -76,7 +76,7 @@ body {
 }
 /*头部导航*/
 header {
-  min-width: 1200px;
+ /* min-width: 1200px;*/
   background-color: #fff;
   border-top: solid 4px #3091F2;
   z-index: 1000;
@@ -113,4 +113,6 @@ main .main-right {
 main .el-menu {
   background: transparent !important;
 }
+.router-link{display:inline-block;width:100%;height:100%;text-align:center;color:#475669;text-decoration: none; }
+.is-active .router-link{color:#20a0ff; }
 </style>

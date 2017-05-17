@@ -1,7 +1,7 @@
 <template>
   <div class="activePublic">
     <!-- 步骤条 -->
-    <el-steps :space="200" :active="step" finish-status="finish" style="margin-bottom:30px;">
+    <el-steps :space="200" :active="step" finish-status="finish" align="left" style="margin-bottom:30px;">
       <el-step title="活动信息"></el-step>
       <el-step title="报名签到"></el-step>
       <el-step title="分享设置"></el-step>

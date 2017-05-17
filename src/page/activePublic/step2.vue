@@ -128,7 +128,7 @@
 </template>
 
 <script>
-	import store from '../../store.js'
+	import store from './../../store.js'
 
 	/**
 	 * [swopItemOfArray 交换数组元素]
