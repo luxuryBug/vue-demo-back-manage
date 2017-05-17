@@ -44,10 +44,40 @@ const ruleForm =  {
 	adTitle: '',
 	adSupportLink: ''
 }
+// 报名签到
+const signForm = {
+	limit: '',
+	limitPerson: '',
+	limitPersonNum: '',
+	limitPay: '',
+	limitPayNum: '',
+	limitCancelSign: '',
+	limitCancelSignNum: '',
+	limitAudit: '',
+	signList: [
+		{
+			mustFill: true,
+			title: '标题1'
+		},
+		{
+			mustFill: false,
+			title: '手机'
+		}
+	],
+	limitSignIf: '',
+	limitSignMethod: ''
+}
+
+
+
+
+// 分享设置
+// 个性设置
 
 /*状态数据*/
 const state = {
-	ruleForm
+	ruleForm,
+	signForm
 }
  
 /* 从本地存储读取数据 */
@@ -60,6 +90,10 @@ const mutations = {
 	setRuleForm: function(state,payload){
 		state.ruleForm = Object.assign(state.ruleForm,payload);
 		localStorage.setItem('ruleForm',JSON.stringify(state.ruleForm));
+	},
+	setSignForm: function(state,payload){
+		state.signForm = Object.assign(state.signForm,payload);
+		localStorage.setItem('signForm',JSON.stringify(state.signForm));
 	}
 }
 
