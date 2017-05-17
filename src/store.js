@@ -68,7 +68,10 @@ const signForm = {
 	limitSignMethod: ''
 }
 
-
+const shareSet =  {
+	title: '',
+	describe: ''
+}
 
 
 // 分享设置
@@ -77,7 +80,8 @@ const signForm = {
 /*状态数据*/
 const state = {
 	ruleForm,
-	signForm
+	signForm,
+	shareSet
 }
  
 /* 从本地存储读取数据 */
@@ -94,6 +98,10 @@ const mutations = {
 	setSignForm: function(state,payload){
 		state.signForm = Object.assign(state.signForm,payload);
 		localStorage.setItem('signForm',JSON.stringify(state.signForm));
+	},
+	setShareSet: function(state,payload){
+		state.shareSet = Object.assign(state.shareSet,payload);
+		localStorage.setItem('shareSet',JSON.stringify(state.shareSet));
 	}
 }
 

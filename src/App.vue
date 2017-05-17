@@ -27,7 +27,7 @@
       <!-- 右侧内容 -->
       <div class="main-right">
         <transition>
-          <router-view></router-view>
+          <router-view class="view"></router-view>
         </transition>  
       </div>
     </main>
